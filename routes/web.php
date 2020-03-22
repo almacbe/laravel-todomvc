@@ -20,3 +20,7 @@ Route::get('/', function () {
 Route::get('/todomvc', function () {
     return view('todomvc');
 });
+
+Route::resource('tasks', 'TaskController');
+Route::put('/tasks/{id}', 'TaskController@done')
+    ->name('tasks.done');

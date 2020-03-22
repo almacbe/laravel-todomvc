@@ -13,9 +13,13 @@
 <section class="todoapp">
     <header class="header">
         <h1>todos</h1>
-        <input class="new-todo" placeholder="What needs to be done?" autofocus>
+        <form action="{{ route('tasks.store') }}" method="POST" name="add_task">
+            {{ csrf_field() }}
+            <input name="description" class="new-todo" placeholder="What needs to be done?" autofocus>
+        </form>
     </header>
     <!-- This section should be hidden by default and shown when there are todos -->
+    @if(count($tasks) > 0)
     <section class="main">
         <input id="toggle-all" class="toggle-all" type="checkbox">
         <label for="toggle-all">Mark all as complete</label>
@@ -38,8 +42,27 @@
                 </div>
                 <input class="edit" value="Rule the web">
             </li>
+            @foreach($tasks as $task)
+                <li>
+                    <div class="view">
+{{--                        <form action="{{ route('tasks.done', $task->id)}}" method="post">--}}
+{{--                            {{ csrf_field() }}--}}
+{{--                            @method('PUT')--}}
+                            <input class="toggle" type="checkbox" value="{{$task->done}}" @if($task->done) checked @endif>
+{{--                        </form>--}}
+                        <label>{{ $task['description'] }}</label>
+                        <form action="{{ route('tasks.destroy', $task->id)}}" method="post">
+                            {{ csrf_field() }}
+                            @method('DELETE')
+                            <button class="destroy"></button>
+                        </form>
+                    </div>
+                    <input class="edit" value="Rule the web">
+                </li>
+            @endforeach
         </ul>
     </section>
+    @endif
     <!-- This footer should hidden by default and shown when there are todos -->
     <footer class="footer">
         <!-- This should be `0 items left` by default -->
