@@ -2,41 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TaskCollection;
+use App\Http\Resources\TaskResource;
 use App\Task;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Redirect;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $data['tasks'] = Task::all();
-
-        return view('todomvc', $data);
+        return TaskResource::collection(Task::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(Request $request): Response
     {
         $request->validate([
             'description' => 'required',
@@ -45,40 +25,28 @@ class TaskController extends Controller
         $data['done'] = false;
         Task::create($data);
 
-        return Redirect::to('tasks')
-            ->with('success', 'Greate! Task created successfully.');
+        return response([], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function undone($id)
     {
-        //
+        $task = Task::findOrFail($id);
+        $task->done = false;
+        $task->save();
+
+        return response([]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function done($id)
     {
-        //
+        $task = Task::findOrFail($id);
+        $task->done = true;
+        $task->save();
+
+        return response([]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): Response
     {
         $request->validate([
             'description' => 'required',
@@ -87,22 +55,7 @@ class TaskController extends Controller
         $update = ['description' => $request->description];
         Task::where('id', $id)->update($update);
 
-        return Redirect::to('tasks')
-            ->with('success', 'Great! Task updated successfully');
-    }
-
-    public function done(Request $request, $id)
-    {
-        $request->validate([
-            'done' => 'required',
-        ]);
-
-        $update = ['done' => !$request->done];
-        Task::where('id', $id)->update($update);
-
-
-        return Redirect::to('tasks')
-            ->with('success', 'Great! Task updated successfully');
+        return response([]);
     }
 
     /**
@@ -115,7 +68,6 @@ class TaskController extends Controller
     {
         Task::where('id', $id)->delete();
 
-        return Redirect::to('tasks')
-            ->with('success', 'Task deleted successfully');
+        return response([], 204);
     }
 }
