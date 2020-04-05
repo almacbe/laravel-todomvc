@@ -44,10 +44,15 @@ final class Todo extends AggregateRoot
     public function toArray()
     {
         return [
-            'id' => $this->id->toString(),
+            'uuid' => $this->id->toString(),
             'description' => $this->description->toString(),
             'done' => $this->completed,
         ];
+    }
+
+    public function id(): TodoId
+    {
+        return $this->id;
     }
 
     protected function apply(DomainEvent $event): void

@@ -7,6 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Task::class, function (Faker $faker) {
     return [
+        'uuid' => $faker->uuid,
         'description' => $faker->text,
         'done' => $faker->boolean,
     ];
