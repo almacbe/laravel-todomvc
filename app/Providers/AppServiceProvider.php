@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Todo\Domain\TodoRepository;
+use Todo\Infrastructure\Persistence\Eloquent\TaskRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(
+            TodoRepository::class,
+            TaskRepository::class
+        );
     }
 
     /**

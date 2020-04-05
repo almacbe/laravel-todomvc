@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
+use App\Jobs\CreateTask;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Redirect;
+use Todo\Application\CreateTodo;
 
 class TaskController extends Controller
 {
@@ -22,8 +22,9 @@ class TaskController extends Controller
             'description' => 'required',
         ]);
         $data = $request->all();
-        $data['done'] = false;
-        Task::create($data);
+
+        $createTodo = CreateTodo::withDescription($data['description']);
+        CreateTask::dispatch($createTodo);
 
         return response([], 201);
     }
