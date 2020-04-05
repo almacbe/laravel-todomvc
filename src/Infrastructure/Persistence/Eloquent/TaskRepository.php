@@ -3,6 +3,7 @@
 namespace Todo\Infrastructure\Persistence\Eloquent;
 
 use App\Task;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Todo\Domain\Todo;
 use Todo\Domain\TodoDescription;
 use Todo\Domain\TodoId;
@@ -13,14 +14,19 @@ class TaskRepository implements TodoRepository
 {
     public function save(Todo $todo): void
     {
+        try {
+            $task = $this->find($todo->id());
+        } catch (ModelNotFoundException $exception) {
+            $task = Task::make();
+        }
         $data = $todo->toArray();
-        $task = Task::create($data);
+        $task->fill($data);
         $task->save();
     }
 
     public function get(TodoId $id): Todo
     {
-        $taskModel = Task::findOrFail($id->toString());
+        $taskModel = $this->find($id);
         $taskArray = [
             'id' => TodoId::fromString($taskModel->uuid),
             'description' => TodoDescription::fromString($taskModel->description),
@@ -36,5 +42,10 @@ class TaskRepository implements TodoRepository
     public function remove(Todo $todo): void
     {
         Task::where('uuid', $todo->id()->toString())->delete();
+    }
+
+    private function find(TodoId $id): Task
+    {
+        return Task::where('uuid', $id->toString())->firstOrFail();
     }
 }

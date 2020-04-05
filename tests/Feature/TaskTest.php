@@ -47,7 +47,7 @@ class TaskTest extends TestCase
     {
         $task = factory(Task::class)->create();
 
-        $url = sprintf('/api/tasks/%s', $task['id']);
+        $url = sprintf('/api/tasks/%s', $task['uuid']);
         $response = $this->json('DELETE', $url);
 
         $response->assertStatus(204);
@@ -97,7 +97,7 @@ class TaskTest extends TestCase
     {
         $task = factory(Task::class)->state('undone')->create();
 
-        $url = sprintf('/api/tasks/%d/done', $task->id);
+        $url = sprintf('/api/tasks/%s/done', $task->uuid);
         $response = $this->json('PUT', $url);
 
         $response->isSuccessful();
@@ -106,7 +106,7 @@ class TaskTest extends TestCase
             'tasks',
             [
                 'description' => $task->description,
-                'id' => $task->id,
+                'uuid' => $task->uuid,
                 'done' => true,
             ]
         );

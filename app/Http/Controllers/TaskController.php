@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TaskResource;
+use App\Jobs\CompleteTask;
 use App\Jobs\CreateTask;
 use App\Jobs\RemoveTask;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Todo\Application\CompleteTodo;
 use Todo\Application\CreateTodo;
 use Todo\Application\RemoveTodo;
 
@@ -42,9 +44,8 @@ class TaskController extends Controller
 
     public function done($id)
     {
-        $task = Task::findOrFail($id);
-        $task->done = true;
-        $task->save();
+        $completeTodo = CompleteTodo::withId($id);
+        CompleteTask::dispatch($completeTodo);
 
         return response([]);
     }
