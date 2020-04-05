@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TaskResource;
 use App\Jobs\CreateTask;
+use App\Jobs\RemoveTask;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Todo\Application\CreateTodo;
+use Todo\Application\RemoveTodo;
 
 class TaskController extends Controller
 {
@@ -67,7 +69,8 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        Task::where('id', $id)->delete();
+        $removeTodo = RemoveTodo::withId($id);
+        RemoveTask::dispatch($removeTodo);
 
         return response([], 204);
     }
