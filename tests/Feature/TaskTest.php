@@ -59,7 +59,7 @@ class TaskTest extends TestCase
     {
         $task = factory(Task::class)->create();
 
-        $url = sprintf('/api/tasks/%d', $task->id);
+        $url = sprintf('/api/tasks/%s', $task->uuid);
         $response = $this->json('PUT', $url, ['description' => 'updated description']);
 
         $response->isSuccessful();
@@ -68,7 +68,7 @@ class TaskTest extends TestCase
             'tasks',
             [
                 'description' => 'updated description',
-                'id' => $task->id,
+                'uuid' => $task->uuid,
                 'done' => $task->done,
             ]
         );

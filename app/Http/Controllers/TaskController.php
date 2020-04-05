@@ -7,6 +7,7 @@ use App\Jobs\CompleteTask;
 use App\Jobs\CreateTask;
 use App\Jobs\IncompleteTask;
 use App\Jobs\RemoveTask;
+use App\Jobs\UpdateDescriptionTask;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,6 +15,7 @@ use Todo\Application\CompleteTodo;
 use Todo\Application\CreateTodo;
 use Todo\Application\IncompleteTodo;
 use Todo\Application\RemoveTodo;
+use Todo\Application\UpdateTodoDescription;
 
 class TaskController extends Controller
 {
@@ -57,8 +59,8 @@ class TaskController extends Controller
             'description' => 'required',
         ]);
 
-        $update = ['description' => $request->description];
-        Task::where('id', $id)->update($update);
+        $updateTodoDescription = UpdateTodoDescription::withIdAndDescription($id, $request->description);
+        UpdateDescriptionTask::dispatch($updateTodoDescription);
 
         return response([]);
     }

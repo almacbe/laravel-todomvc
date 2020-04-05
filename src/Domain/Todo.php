@@ -41,6 +41,11 @@ final class Todo extends AggregateRoot
         $this->recordThat(new TodoIncompleted($this->id));
     }
 
+    public function updateDescription(TodoDescription $description)
+    {
+        $this->recordThat(new DescriptionUpdated($this->id, $description));
+    }
+
     public function toArray()
     {
         return [
@@ -74,6 +79,8 @@ final class Todo extends AggregateRoot
             case TodoIncompleted::class:
                 $this->completed = false;
                 break;
+            case DescriptionUpdated::class:
+                $this->description = $event->description();
         }
     }
 }
