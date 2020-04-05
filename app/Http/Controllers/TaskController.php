@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TaskResource;
 use App\Jobs\CompleteTask;
 use App\Jobs\CreateTask;
+use App\Jobs\IncompleteTask;
 use App\Jobs\RemoveTask;
 use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Todo\Application\CompleteTodo;
 use Todo\Application\CreateTodo;
+use Todo\Application\IncompleteTodo;
 use Todo\Application\RemoveTodo;
 
 class TaskController extends Controller
@@ -35,9 +37,8 @@ class TaskController extends Controller
 
     public function undone($id)
     {
-        $task = Task::findOrFail($id);
-        $task->done = false;
-        $task->save();
+        $incompleteTodo = IncompleteTodo::withId($id);
+        IncompleteTask::dispatch($incompleteTodo);
 
         return response([]);
     }

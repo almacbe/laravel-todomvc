@@ -78,7 +78,7 @@ class TaskTest extends TestCase
     {
         $task = factory(Task::class)->state('done')->create();
 
-        $url = sprintf('/api/tasks/%d/undone', $task->id);
+        $url = sprintf('/api/tasks/%s/undone', $task->uuid);
         $response = $this->json('PUT', $url);
 
         $response->isSuccessful();
@@ -87,7 +87,7 @@ class TaskTest extends TestCase
             'tasks',
             [
                 'description' => $task->description,
-                'id' => $task->id,
+                'uuid' => $task->uuid,
                 'done' => false,
             ]
         );
