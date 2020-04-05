@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TaskTest extends TestCase
@@ -63,9 +62,7 @@ class TaskTest extends TestCase
         $url = sprintf('/api/tasks/%d', $task->id);
         $response = $this->json('PUT', $url, ['description' => 'updated description']);
 
-        $response
-            ->assertStatus(200);
-
+        $response->isSuccessful();
         $this->assertCount(1, Task::all());
         $this->assertDatabaseHas(
             'tasks',
@@ -84,8 +81,7 @@ class TaskTest extends TestCase
         $url = sprintf('/api/tasks/%d/undone', $task->id);
         $response = $this->json('PUT', $url);
 
-        $response
-            ->assertStatus(200);
+        $response->isSuccessful();
         $this->assertCount(1, Task::all());
         $this->assertDatabaseHas(
             'tasks',
@@ -104,8 +100,7 @@ class TaskTest extends TestCase
         $url = sprintf('/api/tasks/%d/done', $task->id);
         $response = $this->json('PUT', $url);
 
-        $response
-            ->assertStatus(200);
+        $response->isSuccessful();
         $this->assertCount(1, Task::all());
         $this->assertDatabaseHas(
             'tasks',
