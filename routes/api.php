@@ -20,4 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::put('/tasks/{id}/undone', 'TaskController@undone');
 Route::put('/tasks/{id}/done', 'TaskController@done');
+Route::get('/tasks/active', 'TaskController@actives');
 Route::resource('tasks', 'TaskController');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TaskResource;
 use App\Jobs\CompleteTask;
 use App\Jobs\CreateTask;
+use App\Jobs\GetAllTasks;
 use App\Jobs\IncompleteTask;
 use App\Jobs\RemoveTask;
 use App\Jobs\UpdateDescriptionTask;
@@ -77,5 +78,12 @@ class TaskController extends Controller
         RemoveTask::dispatch($removeTodo);
 
         return response([], 204);
+    }
+
+    public function actives()
+    {
+        $tasks = Task::where('done', false)->get();
+
+        return TaskResource::collection($tasks);
     }
 }
