@@ -45,13 +45,9 @@
             @foreach($tasks as $task)
                 <li>
                     <div class="view">
-{{--                        <form action="{{ route('tasks.done', $task->id)}}" method="post">--}}
-{{--                            {{ csrf_field() }}--}}
-{{--                            @method('PUT')--}}
-                            <input class="toggle" type="checkbox" value="{{$task->done}}" @if($task->done) checked @endif>
-{{--                        </form>--}}
+                        <input class="toggle" type="checkbox" @if($task->done) checked @endif>
                         <label>{{ $task['description'] }}</label>
-                        <form action="{{ route('tasks.destroy', $task->id)}}" method="post">
+                        <form action="{{ route('tasks.destroy', $task->uuid)}}" method="post">
                             {{ csrf_field() }}
                             @method('DELETE')
                             <button class="destroy"></button>
@@ -62,7 +58,7 @@
             @endforeach
         </ul>
     </section>
-    @endif
+
     <!-- This footer should hidden by default and shown when there are todos -->
     <footer class="footer">
         <!-- This should be `0 items left` by default -->
@@ -82,6 +78,7 @@
         <!-- Hidden if no completed items are left ↓ -->
         <button class="clear-completed">Clear completed</button>
     </footer>
+    @endif
 </section>
 <footer class="info">
     <p>Double-click to edit a todo</p>

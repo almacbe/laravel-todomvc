@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Resources\TaskResource;
+use App\Task;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +20,11 @@ Route::get('/', function () {
 });
 
 Route::get('/todomvc', function () {
-    return view('todomvc');
+    return view(
+        'todomvc',
+        [
+            'tasks' => TaskResource::collection(Task::all()),
+        ]
+    );
 });
 
